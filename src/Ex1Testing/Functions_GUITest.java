@@ -1,5 +1,7 @@
 package Ex1Testing;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +25,7 @@ import Ex1.function;
  *
  */
 class Functions_GUITest {
-	
+
 	public static void main(String[] a) {
 		Functions_GUI data = FunctionsFactory();
 		int w=1000, h=600, res=200;
@@ -31,45 +33,82 @@ class Functions_GUITest {
 		Range ry = new Range(-5,15);
 		data.drawFunctions(w,h,rx,ry,res);
 	}
+
 	
 	private Functions_GUI _data=null;
-//	@BeforeAll
-//	static void setUpBeforeClass() throws Exception {
-//	}
+	//	@BeforeAll
+	//	static void setUpBeforeClass() throws Exception {
+	//	}
 
 	@BeforeEach
 	void setUp() throws Exception {
 		_data = FunctionsFactory();
 	}
 
-	//@Test
+	@Test
 	void testFunctions_GUI() {
-	//	fail("Not yet implemented");
-	}
+		Functions_GUI c1 = new Functions_GUI();
 
-	//@Test
-	void testInitFromFile() {
-	//	fail("Not yet implemented");
-	}
-
-	//@Test
-	void testSaveToFile() {
-	//	fail("Not yet implemented");
-	}
-
-	//@Test
-	void testDrawFunctions() {
-		//_data.drawFunctions();
-	//	fail("Not yet implemented");
+		c1.add(new Polynom("3 + 2x^2"));
+		c1.add(new Monom("2"));
+		c1.add(new ComplexFunction().initFromString("plus(div(+1.0x +1.0,mul(+1.0x -4.0, mul(+1.0x +3.0,+1.0x -2.0))),2.0)"));
 	}
 
 	@Test
-	void testDrawFunctionsIntIntRangeRangeInt() {
-		_data.drawFunctions();
-		//fail("Not yet implemented");
+	void testInitFromFile() throws InterruptedException {
+		Functions_GUI test = new Functions_GUI();
+		try {
+			test.initFromFile("/home/dor/file.txt");
+
+			int w=1000, h=600, res=200;
+			Range rx = new Range(-10,10);
+			Range ry = new Range(-5,15);
+			test.drawFunctions(w,h,rx,ry,res);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Thread.sleep(5000);
 	}
-	
-	
+
+	@Test
+	void testSaveToFile() throws InterruptedException {
+		Functions_GUI test = new Functions_GUI();
+		try {
+			test.initFromFile("/home/dor/file.txt");
+			test.saveToFile("/home/dor/saveFile.txt");
+
+			int w=1000, h=600, res=200;
+			Range rx = new Range(-10,10);
+			Range ry = new Range(-5,15);
+			test.drawFunctions(w,h,rx,ry,res);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Thread.sleep(5000);
+
+	}
+
+	@Test
+	void testDrawFunctions() {
+		_data.drawFunctions("/home/dor/GUI_params.txt");
+		//	fail("Not yet implemented");
+	}
+
+	@Test
+	void testDrawFunctionsIntIntRangeRangeInt() throws InterruptedException {
+		int w = 1000, h = 600, res = 200;
+		Range rx = new Range(-10,10);
+		Range ry = new Range(-5,15);
+		_data.drawFunctions(w,h,rx,ry,res);
+		Thread.sleep(5000);
+	}
+
+
 	public static Functions_GUI FunctionsFactory() {
 		Functions_GUI ans = new Functions_GUI();
 		String s1 = "3.1 +2.4x^2 -x^4";
@@ -82,7 +121,7 @@ class Functions_GUITest {
 		for(int i=1;i<s3.length;i++) {
 			cf3.mul(new Polynom(s3[i]));
 		}
-		
+
 		ComplexFunction cf = new ComplexFunction("plus", p1,p2);
 		ComplexFunction cf4 = new ComplexFunction("div", new Polynom("x +1"),cf3);
 		cf4.plus(new Monom("2"));
@@ -103,7 +142,7 @@ class Functions_GUITest {
 		}
 		ans.add(max);
 		ans.add(min);
-		
+
 		return ans;
 	}
 }

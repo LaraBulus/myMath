@@ -71,14 +71,21 @@ public class ComplexFunction implements complex_function{
 		return 0;
 	}
 
-	
+
 	//This function get string and check the function type(cf or polynom)  and send to
 	//the appropriate constructor
 	@Override
 	public function initFromString(String s) {
 		ComplexFunction cf = new ComplexFunction();
 		s = s.replaceAll(" ", "");
-		cf = (ComplexFunction) initFromString(cf, s, "");
+		
+		if(s.contains("("))
+			cf = (ComplexFunction) initFromString(cf, s, "");
+		else {
+			cf.left = new Polynom(s); 
+			cf.right = null;
+			cf.operation = Operation.None;
+		}
 		return cf;
 	}
 
@@ -87,6 +94,7 @@ public class ComplexFunction implements complex_function{
 	//input: "plus(div(+1.0x +1.0,mul(+1.0x -4.0, mul(+1.0x +3.0,+1.0x -2.0))),2.0)" --> String
 	//output: Plus(2.0,Divid(1.0x + 1.0,Times(1.0x - 4.0,Times(1.0x + 3.0,1.0x - 2.0)))) --> CF object
 	private function initFromString(ComplexFunction cf, String fun, String op) {
+
 		int bracketLocation = fun.indexOf("("); //Index of first '('
 		String operation = fun.substring(0, bracketLocation); //String of operation
 		String bFunction = "", restFun = "";
@@ -125,12 +133,9 @@ public class ComplexFunction implements complex_function{
 			restFun = fun.substring(bracketLocation+1, fun.length()-1);
 			String[] arr = restFun.split(",", 2);
 			cf = new ComplexFunction(operation, new Polynom(arr[0]), new Polynom(arr[1]));
-			System.out.println("Last Fun"+cf.toString());			
 		}
 		else {
-			System.out.println("bFUnction: "+bFunction);
 			cf = new ComplexFunction(operation, new Polynom(bFunction), initFromString(cf, restFun, op));	
-			System.out.println("Middle: "+cf.toString());			
 		}
 
 		return cf;
@@ -148,7 +153,7 @@ public class ComplexFunction implements complex_function{
 		return count;
 	}
 
-	
+
 	@Override
 	/**
 	 * Copy Complex Function to new Complex Function.
@@ -249,6 +254,7 @@ public class ComplexFunction implements complex_function{
 			return Operation.None;
 		case "error":
 			return Operation.Error;
+
 		default:
 			throw new ArithmeticException("Operation doesn't exist");
 		}
@@ -293,5 +299,13 @@ public class ComplexFunction implements complex_function{
 		function cf5 = cf3.initFromString(s4);
 		//cf3.initFromString(s2);
 		//System.out.println(cf5.toString());
+		
+		function p1= new Polynom("x^2+x^4");
+		function p2= new Polynom("x+5");
+		function p3= new Polynom("x^2+x^2");
+		String exp="Plus(mul(1.0x^3+1.0x^2,1.0x^1+1.0),1.0x^3+1.0x^2)";
+		ComplexFunction f1= new ComplexFunction("mul", p1, p2);
+		f1.comp(p3);
+		System.out.println(f1.toString());
 	}
 }
