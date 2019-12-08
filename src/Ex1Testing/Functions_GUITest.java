@@ -23,6 +23,7 @@ import Ex1.function;
  *
  */
 class Functions_GUITest {
+	
 	public static void main(String[] a) {
 		Functions_GUI data = FunctionsFactory();
 		int w=1000, h=600, res=200;
@@ -30,6 +31,7 @@ class Functions_GUITest {
 		Range ry = new Range(-5,15);
 		data.drawFunctions(w,h,rx,ry,res);
 	}
+	
 	private Functions_GUI _data=null;
 //	@BeforeAll
 //	static void setUpBeforeClass() throws Exception {
@@ -66,6 +68,8 @@ class Functions_GUITest {
 		_data.drawFunctions();
 		//fail("Not yet implemented");
 	}
+	
+	
 	public static Functions_GUI FunctionsFactory() {
 		Functions_GUI ans = new Functions_GUI();
 		String s1 = "3.1 +2.4x^2 -x^4";
