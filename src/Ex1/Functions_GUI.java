@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 
 public class Functions_GUI implements functions{
@@ -91,7 +95,7 @@ public class Functions_GUI implements functions{
 		return this.allFunctions.retainAll(arg0);
 	}
 
-	
+
 	public function get(int i) {
 		return this.allFunctions.get(i);
 	}
@@ -191,9 +195,35 @@ public class Functions_GUI implements functions{
 	@Override
 	public void drawFunctions(String json_file) {
 		//Default values
-		int width = 1000 , height = 600 ,resolution = 200;
-		double range_X [] = {-10 , 10};
-		double range_Y [] = {-5 , 15};
+//		int width = 1000 , height = 600 ,resolution = 200;
+//		double range_X [] = {-10 , 10};
+//		double range_Y [] = {-5 , 15};
+
+		JSONParser jsonParser = new JSONParser();
+
+		try {
+
+			Object obj = jsonParser.parse(new FileReader(json_file));
+			JSONObject jsonObject = (JSONObject) obj;
+			long width = (long) jsonObject.get("Width");
+			long height =  (long) jsonObject.get("Height");
+			JSONArray Jrx = (JSONArray) jsonObject.get("Range_X");
+			JSONArray Jry = (JSONArray) jsonObject.get("Range_Y");
+			String minX = Jrx.get(0).toString();
+			String maxX = Jrx.get(1).toString();
+			String minY = Jry.get(0).toString();
+			String maxY = Jry.get(1).toString();
+			Range rx = new Range(Integer.parseInt(minX), Integer.parseInt(maxX));
+			Range ry = new Range(Integer.parseInt(minY), Integer.parseInt(maxY));
+			long resolution = (long) jsonObject.get("Resolution");
+			drawFunctions((int)width, (int)height, rx, ry, (int) resolution);
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		} 
+
+
 	}
 
 

@@ -94,8 +94,10 @@ class Functions_GUITest {
 	}
 
 	@Test
-	void testDrawFunctions() {
+	void testDrawFunctions() throws InterruptedException {
 		_data.drawFunctions("/home/dor/GUI_params.txt");
+		Thread.sleep(5000);
+
 		//	fail("Not yet implemented");
 	}
 
